@@ -155,26 +155,34 @@ The application will open in your default web browser. If it does not open autom
 
 ## 📈 Baseline Summary
 
-| Model             |   MAE |   RMSE |     R² | Selected Model          |
-| ----------------- | ----: | -----: | -----: | ----------------------- |
-| **Random Forest** | 4.486 |  7.595 |  0.335 | **🏆 Champion Model**   |
-| **XGBoost**       | 4.489 |  7.645 |  0.326 | **⏳ Competitive Model** |
-| Linear Regression | 4.860 |  8.153 |  0.234 | Bad performance         |
-| KNN               | 5.064 |  8.271 |  0.211 | Worse performance       |
-| Decision Tree     | 6.564 | 10.977 | -0.389 | Worst performance       |
+|         **Model** | **MAE** | **RMSE** | **R2 Score** |
+| ----------------: | ------: | -------: | -----------: |
+|           XGBoost |   4.225 |    5.934 |        0.417 |
+|     Random Forest |   4.255 |    5.967 |        0.410 |
+| Linear Regression |   4.594 |    6.398 |        0.322 |
+|               KNN |   4.876 |    6.772 |        0.241 |
+|     Decision Tree |   5.863 |    8.408 |       -0.170 |
 
 ---
 
-## Hyperparameter Tuning
+##  Hyperparameter Tuning
 
-| Model               |       MAE |      RMSE |        R² |
-| ------------------- | --------: | --------: | --------: |
-| Tuned XGBoost       | **4.418** | **7.549** | **0.343** |
-| Tuned Random Forest |     4.814 |     8.065 |     0.250 |
+| **Model**            | **MAE** | **RMSE**  | **R2 Score** |
+|----------------------|--------:|----------:|-------------:|
+| Tuned XGBoost        | 4.156   | 5.869     | 0.430        |
+| Tuned Random Forest  | 4.254   | 5.978     | 0.408        |
 
-An **XGBoost Regressor** was tuned using `RandomizedSearchCV`, improving delivery-time prediction to **MAE 4.45 days / R² 0.34**, and deployed as an interactive Streamlit application for real-time predictions.
+## Comparison With Log Transformed Value
 
-The tuned **XGBoost Regressor** achieved an MAE of **4.418 days**, an RMSE of **7.549 days**, and an R² score of **0.343** in the reported tuning results. An MAE of around 4.4 days means that predictions differ from actual delivery times by about 4.4 days on average in absolute terms. The R² score indicates that the model explains a limited portion of the variation in delivery time, so there is room for further improvement.
+| **Model**                     | **MAE**   | **RMSE**  | **R2 Score** |
+|-------------------------------|----------:|----------:|-------------:|
+| Tuned XGBoost                 | 4.156     | 5.869     | 0.430        |
+| Log Transformed Tuned XGB     | 4.074     | 6.032     | 0.398        |
+
+
+I selected **Tuned XGBoost** over **Log Transformed Tuned XGB** because it provides better RMSE and R² performance, making it a more balanced choice for the delivery time prediction system. I also deployed it as an interactive Streamlit application for real-time predictions.
+
+The **Tuned XGBoost** achieved an MAE of **4.156 days**, an RMSE of **5.869 days**, and an R² score of **0.430** in the reported tuning results. An MAE of around 4.1 days means that predictions differ from actual delivery times by about 4.1 days on average in absolute terms. The R² score indicates that the model explains a limited portion of the variation in delivery time, so there is room for further improvement.
 
 ---
 
@@ -201,6 +209,12 @@ The tuned **XGBoost Regressor** achieved an MAE of **4.418 days**, an RMSE of **
 * **The data is right-skewed. Most orders arrive quickly, while a few extreme outliers take much longer. I applied log transformation during data preprocessing.**
 
 <img src="https://github.com/curious-arin/Delivery-Time-Prediction-System/blob/main/images/delivery_time_distribution.png" width="100%">
+
+### 3. Delivery-Time Distribution After Removing Invalid Outlier
+
+* **The data was right skewed. Most orders (99%) arrived quickly, while a few extreme outliers took much longer. According to my research i found out that in Ecommerce, product delivery happens between 15 minutes to 30 days but i found sweet spot at 45th day and removed delivery time > 46 because orders taking longer than 45 days to deliver cause severe customer churn and direct financial losses from refunds. This can sometimes lead to damage of company reputation.****
+
+<img src="https://github.com/curious-arin/Delivery-Time-Prediction-System/blob/main/images/final_delivery_time_distribution.png" width="100%">
 
 ### 3. Estimated vs. Actual Delivery Time
 
